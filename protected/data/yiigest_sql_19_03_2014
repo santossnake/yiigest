@@ -1,0 +1,316 @@
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_users`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_users` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_users` (
+  `id_user` INT NOT NULL AUTO_INCREMENT ,
+  `nome` VARCHAR(255) NULL ,
+  `NIF` VARCHAR(255) NULL ,
+  `user` VARCHAR(45) NULL ,
+  `pw` VARCHAR(255) NULL ,
+  `data_nasc` DATE NULL ,
+  `email` VARCHAR(255) NULL ,
+  PRIMARY KEY (`id_user`) ,
+  UNIQUE INDEX `email_UNIQUE` (`email` ASC) ,
+  UNIQUE INDEX `NIF_UNIQUE` (`NIF` ASC) ,
+  UNIQUE INDEX `user_UNIQUE` (`user` ASC) ,
+  UNIQUE INDEX `pw_UNIQUE` (`pw` ASC) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_bancos`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_bancos` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_bancos` (
+  `id_banco` INT NOT NULL AUTO_INCREMENT ,
+  `nome` VARCHAR(255) NULL ,
+  `inicio_nib` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id_banco`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_contas`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_contas` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_contas` (
+  `id_conta` INT NOT NULL AUTO_INCREMENT ,
+  `nome` VARCHAR(255) NULL ,
+  `descricao` VARCHAR(255) NULL ,
+  `NIB` VARCHAR(45) NULL ,
+  `data_abertura` DATE NULL ,
+  `banco` INT NULL ,
+  `user` INT NULL ,
+  `cartao` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id_conta`) ,
+  INDEX `fk_tb_contas_banco_idx` (`banco` ASC) ,
+  INDEX `fk_tb_contas_user_idx` (`user` ASC) ,
+  CONSTRAINT `fk_tb_contas_banco`
+    FOREIGN KEY (`banco` )
+    REFERENCES `yiigest`.`tb_bancos` (`id_banco` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_contas_user`
+    FOREIGN KEY (`user` )
+    REFERENCES `yiigest`.`tb_users` (`id_user` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_repeticao`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_repeticao` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_repeticao` (
+  `id_repeticao` INT NOT NULL AUTO_INCREMENT ,
+  `descricao` VARCHAR(45) NULL ,
+  PRIMARY KEY (`id_repeticao`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_seguros`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_seguros` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_seguros` (
+  `id_seguro` INT NOT NULL AUTO_INCREMENT ,
+  `user` INT NULL ,
+  `carro` INT NULL ,
+  `num_seguro` VARCHAR(45) NULL ,
+  `data_inicio` DATETIME NULL ,
+  `data_fim` DATETIME NULL ,
+  `valor` VARCHAR(45) NULL ,
+  `repeticao` INT NULL ,
+  PRIMARY KEY (`id_seguro`) ,
+  INDEX `fk_tb_seguros_user_idx` (`user` ASC) ,
+  INDEX `fk_tb_seguros_carro_idx` (`carro` ASC) ,
+  INDEX `fk_tb_seguros_repeticao_idx` (`repeticao` ASC) ,
+  CONSTRAINT `fk_tb_seguros_user`
+    FOREIGN KEY (`user` )
+    REFERENCES `yiigest`.`tb_users` (`id_user` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_seguros_carro`
+    FOREIGN KEY (`carro` )
+    REFERENCES `yiigest`.`tb_carros` (`id_carro` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_seguros_repeticao`
+    FOREIGN KEY (`repeticao` )
+    REFERENCES `yiigest`.`tb_repeticao` (`id_repeticao` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_carros`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_carros` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_carros` (
+  `id_carro` INT NOT NULL AUTO_INCREMENT ,
+  `matricula` VARCHAR(45) NULL ,
+  `marca` VARCHAR(45) NULL ,
+  `modelo` VARCHAR(45) NULL ,
+  `km_iniciais` INT NULL ,
+  `data_matricula` DATE NULL ,
+  `seguro` INT NULL ,
+  `combust_inicial` INT NULL ,
+  PRIMARY KEY (`id_carro`) ,
+  UNIQUE INDEX `matricula_UNIQUE` (`matricula` ASC) ,
+  INDEX `fk_tb_carros_seguro_idx` (`seguro` ASC) ,
+  CONSTRAINT `fk_tb_carros_seguro`
+    FOREIGN KEY (`seguro` )
+    REFERENCES `yiigest`.`tb_seguros` (`id_seguro` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_entidade`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_entidade` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_entidade` (
+  `id_entidade` INT NOT NULL AUTO_INCREMENT ,
+  `nome` VARCHAR(255) NULL ,
+  PRIMARY KEY (`id_entidade`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_tipo_desp`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_tipo_desp` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_tipo_desp` (
+  `id_tipo_desp` INT NOT NULL AUTO_INCREMENT ,
+  `descricao` VARCHAR(255) NULL ,
+  PRIMARY KEY (`id_tipo_desp`) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_movimentos`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_movimentos` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_movimentos` (
+  `id_movimento` INT NOT NULL AUTO_INCREMENT ,
+  `descricao` VARCHAR(255) NULL ,
+  `valor` DOUBLE NULL ,
+  `conta_deb` INT NULL ,
+  `conta_cred` INT NULL ,
+  `entidade` INT NULL ,
+  `liquidada` TINYINT(1) NULL ,
+  `data` DATETIME NULL ,
+  `user` INT NULL ,
+  `foto` TEXT NULL ,
+  `tipo_desp` INT NULL ,
+  PRIMARY KEY (`id_movimento`) ,
+  INDEX `fk_tb_movimentos_entidade_idx` (`entidade` ASC) ,
+  INDEX `fk_tb_movimentos_conta_deb_idx` (`conta_deb` ASC) ,
+  INDEX `fk_tb_movimentos_conta_cred_idx` (`conta_cred` ASC) ,
+  INDEX `fk_tb_movimentos_user_idx` (`user` ASC) ,
+  INDEX `fk_tb_movimentos_tipo_desp_idx` (`tipo_desp` ASC) ,
+  CONSTRAINT `fk_tb_movimentos_entidade`
+    FOREIGN KEY (`entidade` )
+    REFERENCES `yiigest`.`tb_entidade` (`id_entidade` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_movimentos_conta_deb`
+    FOREIGN KEY (`conta_deb` )
+    REFERENCES `yiigest`.`tb_contas` (`id_conta` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_movimentos_conta_cred`
+    FOREIGN KEY (`conta_cred` )
+    REFERENCES `yiigest`.`tb_contas` (`id_conta` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_movimentos_user`
+    FOREIGN KEY (`user` )
+    REFERENCES `yiigest`.`tb_users` (`id_user` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_movimentos_tipo_desp`
+    FOREIGN KEY (`tipo_desp` )
+    REFERENCES `yiigest`.`tb_tipo_desp` (`id_tipo_desp` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_despesas_carros`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_despesas_carros` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_despesas_carros` (
+  `id_despesa_carro` INT NOT NULL AUTO_INCREMENT ,
+  `descricao` VARCHAR(255) NULL ,
+  `tipo_desp` INT NULL ,
+  `movimento` INT NULL ,
+  `data` DATE NULL ,
+  `kms` INT NULL ,
+  `carro` INT NULL ,
+  `lt_combust` INT NULL ,
+  `preco_lt` DOUBLE NULL ,
+  `user` INT NULL ,
+  PRIMARY KEY (`id_despesa_carro`) ,
+  INDEX `fk_tb_despesas_carros_tipo_desp_idx` (`tipo_desp` ASC) ,
+  INDEX `fk_tb_despesas_carros_movimento_idx` (`movimento` ASC) ,
+  INDEX `fk_tb_despesas_carros_carro_idx` (`carro` ASC) ,
+  INDEX `fk_tb_despesas_carros_user_idx` (`user` ASC) ,
+  CONSTRAINT `fk_tb_despesas_carros_tipo_desp`
+    FOREIGN KEY (`tipo_desp` )
+    REFERENCES `yiigest`.`tb_tipo_desp` (`id_tipo_desp` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_despesas_carros_movimento`
+    FOREIGN KEY (`movimento` )
+    REFERENCES `yiigest`.`tb_movimentos` (`id_movimento` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_despesas_carros_carro`
+    FOREIGN KEY (`carro` )
+    REFERENCES `yiigest`.`tb_carros` (`id_carro` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_despesas_carros_user`
+    FOREIGN KEY (`user` )
+    REFERENCES `yiigest`.`tb_users` (`id_user` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `yiigest`.`tb_agenda_mov`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `yiigest`.`tb_agenda_mov` ;
+
+CREATE  TABLE IF NOT EXISTS `yiigest`.`tb_agenda_mov` (
+  `id_agenda_mov` INT NOT NULL AUTO_INCREMENT ,
+  `descricao` VARCHAR(255) NULL ,
+  `valor` DOUBLE NULL ,
+  `prim_data` DATETIME NULL ,
+  `conta_deb` INT NULL ,
+  `conta_cred` INT NULL ,
+  `entidade` INT NULL ,
+  `activo` TINYINT(1) NULL ,
+  `repeticao` INT NULL ,
+  `ultima_cobranca` DATETIME NULL ,
+  `user` INT NULL ,
+  PRIMARY KEY (`id_agenda_mov`) ,
+  INDEX `fk_tb_agenda_mov_user_idx` (`user` ASC) ,
+  INDEX `fk_tb_agenda_mov_conta_deb_idx` (`conta_deb` ASC) ,
+  INDEX `fk_tb_agenda_mov_conta_cred_idx` (`conta_cred` ASC) ,
+  INDEX `fk_tb_agenda_mov_entidade_idx` (`entidade` ASC) ,
+  INDEX `fk_tb_agenda_mov_repeticao_idx` (`repeticao` ASC) ,
+  CONSTRAINT `fk_tb_agenda_mov_user`
+    FOREIGN KEY (`user` )
+    REFERENCES `yiigest`.`tb_users` (`id_user` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_agenda_mov_conta_deb`
+    FOREIGN KEY (`conta_deb` )
+    REFERENCES `yiigest`.`tb_contas` (`id_conta` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_agenda_mov_conta_cred`
+    FOREIGN KEY (`conta_cred` )
+    REFERENCES `yiigest`.`tb_contas` (`id_conta` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_agenda_mov_entidade`
+    FOREIGN KEY (`entidade` )
+    REFERENCES `yiigest`.`tb_entidade` (`id_entidade` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_tb_agenda_mov_repeticao`
+    FOREIGN KEY (`repeticao` )
+    REFERENCES `yiigest`.`tb_repeticao` (`id_repeticao` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
