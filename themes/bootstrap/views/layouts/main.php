@@ -31,6 +31,14 @@
                          ),
                     'visible'=>!Yii::app()->user->isGuest
                 ),
+                
+                array('label'=>'Gestão','items'=>array(                                                                                 
+                        array('label'=>'Carros', 'url'=>array('/tbcarros/admin')),
+                        array('label'=>'Contas', 'url'=>array('/tbcontas/admin')),
+                        array('label'=>'Seguros', 'url'=>array('/tbseguros/admin')),
+                        ),
+                    'visible'=>!Yii::app()->user->isGuest
+                ),
                 array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
                 array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
             ),
