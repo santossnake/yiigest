@@ -20,8 +20,8 @@
             'class'=>'bootstrap.widgets.TbMenu',
             'items'=>array(
                 array('label'=>'Home', 'url'=>array('/site/index')),
-                array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
-                array('label'=>'Contact', 'url'=>array('/site/contact')),
+                //array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
+                //array('label'=>'Contact', 'url'=>array('/site/contact')),
                 array('label'=>'Administração','items'=>array(                                                                                 
                         array('label'=>'Bancos', 'url'=>array('/tbbancos/admin')),
                         array('label'=>'Entidades', 'url'=>array('/tbentidades/admin')),
@@ -39,6 +39,33 @@
                         ),
                     'visible'=>!Yii::app()->user->isGuest
                 ),
+                
+                array('label'=>'Movimentos','items'=>array(                                                                                 
+                        array('label'=>'Adicionar Receita', 'url'=>array('/*/admin')),
+                        array('label'=>'Adicionar Despesa', 'url'=>array('/*/admin')),
+                        array('label'=>'Transferencia', 'url'=>array('/*/admin')),
+                        array('label'=>'Adicionar Agendamento', 'url'=>array('/*/admin')),
+                        array('label'=>'Confirmar Agendamentos', 'url'=>array('/*/admin')),
+                         ),
+                    'visible'=>!Yii::app()->user->isGuest
+                ),
+                
+                array('label'=>'Carros','items'=>array(                                                                                 
+                        array('label'=>'Adicionar Abastecimento', 'url'=>array('/*/admin')),
+                        array('label'=>'Adicionar Despesa', 'url'=>array('/*/admin')),
+                        array('label'=>'Adicionar Seguro', 'url'=>array('/*/admin')),
+                         ),
+                    'visible'=>!Yii::app()->user->isGuest
+                ),
+                
+                array('label'=>'Relatorios','items'=>array(                                                                                 
+                        array('label'=>'Adicionar Abastecimento', 'url'=>array('/*/admin')),
+                        array('label'=>'Adicionar Despesa', 'url'=>array('/*/admin')),
+                        array('label'=>'Adicionar Seguro', 'url'=>array('/*/admin')),
+                         ),
+                    'visible'=>!Yii::app()->user->isGuest
+                ),
+                
                 array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
                 array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
             ),
